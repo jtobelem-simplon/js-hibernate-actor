@@ -1,6 +1,6 @@
 
 
-// on associe les clicks d'objet html avec des fonctions
+//on associe les clicks d'objet html avec des fonctions
 $(document).ready(function() {
 
 	//load of datatable
@@ -11,20 +11,20 @@ $(document).ready(function() {
 
 	//click on PUT
 	$("#btn-put").click(updateActor);
-	
+
 	//click on POST
 	$("#btn-post").click(createActor);
-	
+
 	//click on DELETE
 	$("#btn-delete").click(deleteActor);
-	
+
 	//click on RESET
 	$("#btn-reset").click(resetForm);
 
 	//click on GET
 	$("#btn-get").click(getActor);
 
-	
+
 });
 
 
@@ -32,8 +32,8 @@ $(document).ready(function() {
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
-* loadDatatable
-**/
+ * loadDatatable
+ **/
 function loadDatatable() {
 	$('#actorTable').DataTable({
 
@@ -52,8 +52,8 @@ function loadDatatable() {
 }
 
 /**
-* select
-**/
+ * put the selected line info into the good places
+ **/
 function selectRow(){
 	var table = $('#actorTable').DataTable();
 	let dataRow = table.row( this ).data();
@@ -64,17 +64,17 @@ function selectRow(){
 }
 
 /**
-* resetForm
-**/
+ * resetForm and reload the table
+ **/
 function resetForm() {
 	$('#actor-form')[0].reset();
 	$('#actorTable').DataTable().ajax.reload();
-	
+
 }
 
 /**
-* create
-**/
+ * create
+ **/
 function createActor() {
 	var button = $("#btn-post");
 
@@ -91,17 +91,20 @@ function createActor() {
 		url : "/api/actor",
 		data : JSON.stringify(actor),
 		dataType : 'json',
-		
+
 		success : function(json) {
 			button.prop("disabled", false);
 			resetForm()
+		},
+		error : function(e) {
+			console.log("ERROR : ", e);
 		}
 	});
 }
 
 /**
-* update
-**/
+ * update
+ **/
 function updateActor() {
 	var button = $("#btn-put");
 
@@ -111,7 +114,7 @@ function updateActor() {
 	actor["lastName"] = $("#lastname").val();
 	actor["lastUpdate"] = $("#lastUpdate").val();
 
-	
+
 	button.prop("disabled", true);
 
 	$.ajax({
@@ -120,17 +123,20 @@ function updateActor() {
 		url : "/api/actor/"+ actor["id"],
 		data : JSON.stringify(actor),
 		dataType : 'json',
-		
+
 		success : function(json) {
 			button.prop("disabled", false);
 			resetForm()
+		},
+		error : function(e) {
+			console.log("ERROR : ", e);
 		}
 	});
 }
 
 /**
-* getActor
-**/
+ * getActor
+ **/
 function getActor() {
 
 	var idActor = $("#id").val();
@@ -145,14 +151,17 @@ function getActor() {
 			$("#lastUpdate").val(json.lastUpdate);
 			$("#firstname").val(json.firstName);
 			$("#lastname").val(json.lastName);
+		},
+		error : function(e) {
+			console.log("ERROR : ", e);
 		}
 
 	});
 }
 
 /**
-* deleteActor
-**/
+ * deleteActor
+ **/
 function deleteActor() {
 
 	var idActor = $("#id").val();
@@ -163,6 +172,9 @@ function deleteActor() {
 
 		success : function(json) {
 			resetForm();
+		},
+		error : function(e) {
+			console.log("ERROR : ", e);
 		}
 	});
 }
